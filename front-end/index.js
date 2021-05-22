@@ -114,7 +114,7 @@ function updateStudent(id){
 
 
 
-    fetch('http://localhost:5000/student/'+id,{mode:"cors"})
+    fetch(`http://localhost:5000/student/${id}`,{mode:"cors"})
     .then(response => {
         console.log(response);
         return response.json();
