@@ -2,6 +2,8 @@
 var body=  document.querySelector('.tbody');
 var tbody = "";
 var submit = document.querySelector('#submit');
+var updatebtn = document.querySelector('#updatebtn');
+var deletebtn = document.querySelector('#deletebtn');
 
 
 
@@ -41,11 +43,9 @@ function getStudent(){
                         <td>${element.email}</td>
                         <td>${element.address}</td>
                         <td>                   
-                           <button class ='btn btn-success text-white' onClick = updateStudent(${element._id})> Update </a>
+                           <button class ='btn btn-success text-white' onClick = updateStudent('${element._id}')> EDIT</button>
                         </td>
-                        <td >
-                            <button class ='btn btn-danger text-white deletebtn' onClick = "deleteStudent('${element._id}')"> Delete </button>
-                        </td>
+                       
                     </tr>`;
         });
            
@@ -78,16 +78,8 @@ function deleteStudent(id){
 }
 
 
-//callback function to delete data
-function updateStudent(id){
 
-     
-     fetch('http://localhost:5000/student/', {              
-         method : "POST"
-     }).then(err =>{
-         console.log(err);
-     })
- }
+
 
 
 
@@ -117,9 +109,90 @@ function addStudent(){
 }
 
 function updateStudent(id){
-    document.querySelector("#fullname").value = data[0].fullname,
-    document.querySelector("#email").value;
-    document.querySelector("#address").value;
+
+
+
+
+
+    fetch('http://localhost:5000/student/'+id,{mode:"cors"})
+    .then(response => {
+        console.log(response);
+        return response.json();
+    }).then(data => {
+
+
+        
+        console.log(data);
+        document.querySelector("#fullname").value = data.fullname;
+        document.querySelector("#email").value = data.email;
+        document.querySelector("#address").value = data.address;
+        document.querySelector("#ID").value = data._id;
+        
+        
+
+    }).catch(err =>{
+        console.log(err);
+    })   
 }
+
+
+updatebtn.addEventListener('click', ()=>{
+
+
+
+    let fullname = document.querySelector("#fullname").value;
+    let email = document.querySelector("#email").value;
+    let address = document.querySelector("#address").value;
+    let id = document.querySelector("#ID").value;
+    let formData = {
+        fullname,
+        email,
+        address,
+        id
+    }
+ 
+    fetch(`http://localhost:5000/student/update/${id}`,{
+ 
+        method : "POST",
+        body :JSON.stringify(formData),
+        headers:{
+            'Content-Type' : 'application/json'
+        }
+     
+     }).then(err =>{
+         console.log(err);
+     })
+ 
+})
+
+deletebtn.addEventListener('click', ()=>{
+
+
+
+    let fullname = document.querySelector("#fullname").value;
+    let email = document.querySelector("#email").value;
+    let address = document.querySelector("#address").value;
+    let id = document.querySelector("#ID").value;
+    let formData = {
+        fullname,
+        email,
+        address,
+        id
+    }
+ 
+    fetch(`http://localhost:5000/student/${id}`,{
+ 
+        method : "DELETE",
+        body :JSON.stringify(formData),
+        headers:{
+            'Content-Type' : 'application/json'
+        }
+     
+     }).then(err =>{
+         console.log(err);
+     })
+ 
+})
+
 
 
